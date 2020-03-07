@@ -32,6 +32,7 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Row="0">
                     <Grid>
@@ -45,10 +46,15 @@
                     <Button Content="キャプチャー" Click="Button_Click_1"></Button>
                 </Grid>
                 <Grid Row="2">
+                    <Button Content="プロセス一覧" Click="Button_Click_3"></Button>
+                </Grid>
+                <Grid Row="3">
                     <Button Content="アプリだけ終了" Click="Button_Click_2"></Button>
                 </Grid>
             </Grid>
-            <Grid Column="1"></Grid>
+            <Grid Column="1">
+                <TextBox x:Name="Msg" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"></TextBox>
+            </Grid>
         </Grid>
         
     </Grid>

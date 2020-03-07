@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SystemCommon.Model;
 
 namespace SystemCheck.Model
 {
@@ -34,6 +35,44 @@ namespace SystemCheck.Model
             if (command == "app_end")
             {
 
+            }
+
+            if (command == "ps")
+            {
+                var  ps =
+                    System.Diagnostics.Process.GetProcesses();
+
+                var list = new List<ProcessProperty>();
+                foreach (var p in ps)
+                {
+                    var pp = new ProcessProperty();
+                    pp.Name = p.ProcessName;
+                    pp.Id = p.Id;
+                
+                    list.Add(pp);
+                }
+            
+                var sb =new StringBuilder();
+                foreach (var p in list.OrderBy(n=>n.Name))
+                {
+                    sb.AppendLine(p.Name + "\t" + p.Id);
+                }
+                
+                var  b = System.Text.Encoding.ASCII.GetBytes(sb.ToString());
+                return b;
+            }
+
+
+            if (command.StartsWith("kill/"))
+            {
+                var split = command.Split('/');
+
+                if (int.TryParse(split[1], out var id))
+                {
+                    var ps = System.Diagnostics.Process.GetProcessById(id);
+                    ps.Kill();
+                }
+                return new byte[] {79,75};
             }
 
 

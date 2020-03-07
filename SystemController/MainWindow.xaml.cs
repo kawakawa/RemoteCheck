@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SystemCommon.Model;
 
 namespace SystemController
 {
@@ -43,7 +44,7 @@ namespace SystemController
             var buf2 = buf.Where(n => n != 0).ToArray();
 
             var resMsg = Encoding.ASCII.GetString(buf2, 0, buf2.Length);
-            Console.WriteLine(resMsg);
+            this.Msg.Text = resMsg;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -67,6 +68,16 @@ namespace SystemController
         {
             var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
             tcp.SendNoReturn("app_end");
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
+            var returnData = tcp.Send("ps");
+            var buf = returnData.GetBuffer();
+            var buf2 = buf.Where(n => n != 0).ToArray();
+            var resMsg = Encoding.ASCII.GetString(buf2, 0, buf2.Length);
+            this.Msg.Text = resMsg;
         }
     }
 }
