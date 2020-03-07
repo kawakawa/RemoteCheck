@@ -13,6 +13,9 @@ namespace SystemCheck.Model
 {
     public class Analyze
     {
+        private static byte[] eof = new byte[] { 45,79,70,95,100,97,116,97};
+        
+        
         public static byte[] Exec(string command)
         {
             if (command == "cap")
@@ -29,7 +32,11 @@ namespace SystemCheck.Model
                 var ms = new MemoryStream();
                 bmp.Save(ms, ImageFormat.Png);
 
-                return ms.GetBuffer();
+
+                var buf = ms.GetBuffer();
+                buf = buf.Concat(eof).ToArray();
+                
+                return buf;
             }
 
             if (command == "app_end")
@@ -58,8 +65,11 @@ namespace SystemCheck.Model
                     sb.AppendLine(p.Name + "\t" + p.Id);
                 }
                 
-                var  b = System.Text.Encoding.ASCII.GetBytes(sb.ToString());
-                return b;
+                
+                var  b = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
+                
+                var buf = b.Concat(eof).ToArray();
+                return buf;
             }
 
 
@@ -72,11 +82,15 @@ namespace SystemCheck.Model
                     var ps = System.Diagnostics.Process.GetProcessById(id);
                     ps.Kill();
                 }
-                return new byte[] {79,75};
+                var b= new byte[] {79,75,13,10};
+                var buf = b.Concat(eof).ToArray();
+                return buf;
+                
             }
 
 
-            return new byte[] {101,110,100};
+            var end = new byte[] {101,110,100,13,10};
+            return end.Concat(eof).ToArray();
         }
     }
 }

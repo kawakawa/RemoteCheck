@@ -63,13 +63,9 @@ namespace SystemCheck.Model
 
         private void TcpReceiveProc()
         {
-            //ListenするIPアドレス
-            var ipString = "127.0.0.1";
-            var ipAdd = System.Net.IPAddress.Parse(ipString);
-            
-            
+
             //TcpListenerオブジェクトを作成する
-            _listener = new System.Net.Sockets.TcpListener(ipAdd, _port);
+            _listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Any, _port);
             
             
             //Listenを開始する
@@ -96,10 +92,6 @@ namespace SystemCheck.Model
                             //文字列化
                             var command = Encoding.ASCII.GetString(buffer2.ToArray()).TrimEnd('\n'); ;
 
-
-
-
-                            
                             var returnSendMsgByte = Analyze.Exec(command);
                             //データを送信する
                             ns.Write(returnSendMsgByte, 0, returnSendMsgByte.Length);

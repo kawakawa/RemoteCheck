@@ -37,47 +37,66 @@ namespace SystemController
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var tcp=new TcpManager(IpTextBox.Text, PortTextBox.Text);
-            var returnData= tcp.Send(sendMsg.Text);
+            try
+            {
+                var tcp=new TcpManager(IpTextBox.Text, PortTextBox.Text);
+                var buf= tcp.Send(sendMsg.Text);
 
-            var buf = returnData.GetBuffer();
-            var buf2 = buf.Where(n => n != 0).ToArray();
+                var buf2 = buf.Where(n => n != 0).ToArray();
 
-            var resMsg = Encoding.ASCII.GetString(buf2, 0, buf2.Length);
-            this.Msg.Text = resMsg;
+                var resMsg = Encoding.UTF8.GetString(buf2, 0, buf2.Length);
+                this.Msg.Text = resMsg;
+
+            }
+            catch (Exception ex)
+            {
+                this.Msg.Text = ex.Message;
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
-            var returnData = tcp.Send("cap");
+            try
+            {
+                var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
+                var buf = tcp.Send("cap");
 
-            Console.WriteLine("GetData");
+                Console.WriteLine("GetData");
 
-            var w=new CapForm();
-            Bitmap bmp = new Bitmap(returnData);
+                var ms = new MemoryStream(buf);
+                var bmp = new Bitmap(ms);
+                var w = new CapForm {pictureBox1 = {Height = bmp.Height, Width = bmp.Width, Image = bmp}};
+                w.Show();
 
-            w.pictureBox1.Height = bmp.Height;
-            w.pictureBox1.Width = bmp.Width;
-            w.pictureBox1.Image = bmp;
-            w.Show();
-
+            }
+            catch (Exception ex)
+            {
+                this.Msg.Text = ex.Message;
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
-            tcp.SendNoReturn("app_end");
+            // var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
+            // tcp.SendNoReturn("app_end");
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
-            var returnData = tcp.Send("ps");
-            var buf = returnData.GetBuffer();
-            var buf2 = buf.Where(n => n != 0).ToArray();
-            var resMsg = Encoding.ASCII.GetString(buf2, 0, buf2.Length);
-            this.Msg.Text = resMsg;
+            try
+            {
+                var tcp = new TcpManager(IpTextBox.Text, PortTextBox.Text);
+                var buf = tcp.Send("ps");
+            
+                var buf2 = buf.Where(n => n != 0).ToArray();
+                var resMsg = Encoding.UTF8.GetString(buf2, 0, buf2.Length);
+                this.Msg.Text = resMsg;
+
+            }
+            catch (Exception ex)
+            {
+                this.Msg.Text = ex.Message;
+            }
         }
     }
 }
